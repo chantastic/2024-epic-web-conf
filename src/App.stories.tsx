@@ -26,6 +26,8 @@ export const FirstMoveIsX: Story = {
       (await canvas.findAllByLabelText("Taken space. X. Column 1. Row 1"))
         .length
     ).toBe(1);
+
+    await expect(await canvas.findByText("Next player: O")).toBeInTheDocument();
   },
 };
 
@@ -45,5 +47,7 @@ export const SecondMoveIsO: Story = {
       (await canvas.findAllByLabelText("Taken space. O. Column 2. Row 1"))
         .length
     ).toBe(1);
+
+    await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
   },
 };

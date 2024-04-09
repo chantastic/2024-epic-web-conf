@@ -36,6 +36,8 @@ export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState<SquareValue[]>(Array(9).fill(null));
 
+  const status = "Next player: " + (xIsNext ? "X" : "O");
+
   function handleClick(i: number) {
     if (squares[i]) {
       return;
@@ -52,6 +54,7 @@ export default function Board() {
 
   return (
     <>
+      <div className="status">{status}</div>
       <div className="board-row">
         <Square
           index={0}
