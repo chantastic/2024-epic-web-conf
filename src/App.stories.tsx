@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { userEvent, within } from "@storybook/test";
+import { userEvent, within, expect } from "@storybook/test";
 
 import App from "./App";
 
@@ -21,5 +21,10 @@ export const FirstMoveIsX: Story = {
     await userEvent.click(
       await canvas.findByLabelText("Open space. Column 1. Row 1")
     );
+
+    await expect(
+      (await canvas.findAllByLabelText("Taken space. X. Column 1. Row 1"))
+        .length
+    ).toBe(1);
   },
 };
