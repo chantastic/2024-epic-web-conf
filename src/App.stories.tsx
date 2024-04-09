@@ -127,3 +127,25 @@ export const OWinsThenGoesToMove4: Story = {
     await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
   },
 };
+
+export const OWinsThenGoesToMove4PlayWinningXMove: Story = {
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+
+    if (OWinsThenGoesToMove4.play) {
+      await OWinsThenGoesToMove4.play(context);
+    }
+
+    await userEvent.click(canvas.getByLabelText("Open space. Column 1. Row 3"));
+
+    await expect(
+      await canvas.queryByRole("button", { name: /Go to move #6/i })
+    ).toBeNull();
+
+    await expect(
+      await canvas.queryByRole("button", { name: /Go to move #5/i })
+    ).not.toBeNull();
+
+    await expect(await canvas.findByText("Winner: X")).toBeInTheDocument();
+  },
+};
