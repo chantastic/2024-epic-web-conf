@@ -51,3 +51,44 @@ export const SecondMoveIsO: Story = {
     await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
   },
 };
+
+export const XWins: Story = {
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+
+    if (SecondMoveIsO.play) {
+      await SecondMoveIsO.play(context);
+    }
+
+    function moveOnSpaceWithLabel(label: string) {
+      return userEvent.click(canvas.getByLabelText(label));
+    }
+
+    moveOnSpaceWithLabel("Open space. Column 1. Row 2");
+    moveOnSpaceWithLabel("Open space. Column 2. Row 2");
+    moveOnSpaceWithLabel("Open space. Column 1. Row 3");
+
+    await expect(await canvas.findByText("Winner: X")).toBeInTheDocument();
+  },
+};
+
+export const OWins: Story = {
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+
+    if (SecondMoveIsO.play) {
+      await SecondMoveIsO.play(context);
+    }
+
+    function moveOnSpaceWithLabel(label: string) {
+      return userEvent.click(canvas.getByLabelText(label));
+    }
+
+    moveOnSpaceWithLabel("Open space. Column 1. Row 2");
+    moveOnSpaceWithLabel("Open space. Column 2. Row 2");
+    moveOnSpaceWithLabel("Open space. Column 3. Row 3");
+    moveOnSpaceWithLabel("Open space. Column 2. Row 3");
+
+    await expect(await canvas.findByText("Winner: O")).toBeInTheDocument();
+  },
+};
