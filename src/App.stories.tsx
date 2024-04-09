@@ -108,3 +108,22 @@ export const OWins: Story = {
     await expect(await canvas.findByRole("button", { name: /Go to move #6/i }));
   },
 };
+
+export const OWinsThenGoesToMove4: Story = {
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+
+    if (OWins.play) {
+      await OWins.play(context);
+    }
+
+    await userEvent.click(
+      await canvas.findByRole("button", { name: /Go to move #4/i })
+    );
+
+    await expect((await canvas.findAllByLabelText(/Taken space/i)).length).toBe(
+      4
+    );
+    await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
+  },
+};
