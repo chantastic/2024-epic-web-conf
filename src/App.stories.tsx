@@ -15,8 +15,8 @@ type Story = StoryObj<typeof App>;
 export const TicTacToe: Story = {};
 
 export const FirstMoveIsX: Story = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
 
     await userEvent.click(
       await canvas.findByLabelText("Open space. Column 1. Row 1")
@@ -24,6 +24,25 @@ export const FirstMoveIsX: Story = {
 
     await expect(
       (await canvas.findAllByLabelText("Taken space. X. Column 1. Row 1"))
+        .length
+    ).toBe(1);
+  },
+};
+
+export const SecondMoveIsO: Story = {
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+
+    if (FirstMoveIsX.play) {
+      await FirstMoveIsX.play(context);
+    }
+
+    await userEvent.click(
+      await canvas.findByLabelText("Open space. Column 2. Row 1")
+    );
+
+    await expect(
+      (await canvas.findAllByLabelText("Taken space. O. Column 2. Row 1"))
         .length
     ).toBe(1);
   },
