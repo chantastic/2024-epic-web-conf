@@ -12,7 +12,15 @@ const meta: Meta<typeof App> = {
 export default meta;
 type Story = StoryObj<typeof App>;
 
-export const TicTacToe: Story = {};
+export const TicTacToe: Story = {
+  play: async (context) => {
+    const canvas = within(context.canvasElement);
+
+    await expect(
+      await canvas.findByRole("button", { name: /Go to game start/i })
+    );
+  },
+};
 
 export const FirstMoveIsX: Story = {
   play: async (context) => {
@@ -28,6 +36,8 @@ export const FirstMoveIsX: Story = {
     ).toBe(1);
 
     await expect(await canvas.findByText("Next player: O")).toBeInTheDocument();
+
+    await expect(await canvas.findByRole("button", { name: /Go to move #1/i }));
   },
 };
 
@@ -49,6 +59,8 @@ export const SecondMoveIsO: Story = {
     ).toBe(1);
 
     await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
+
+    await expect(await canvas.findByRole("button", { name: /Go to move #2/i }));
   },
 };
 
@@ -69,6 +81,8 @@ export const XWins: Story = {
     moveOnSpaceWithLabel("Open space. Column 1. Row 3");
 
     await expect(await canvas.findByText("Winner: X")).toBeInTheDocument();
+
+    await expect(await canvas.findByRole("button", { name: /Go to move #5/i }));
   },
 };
 
@@ -90,5 +104,7 @@ export const OWins: Story = {
     moveOnSpaceWithLabel("Open space. Column 2. Row 3");
 
     await expect(await canvas.findByText("Winner: O")).toBeInTheDocument();
+
+    await expect(await canvas.findByRole("button", { name: /Go to move #6/i }));
   },
 };
