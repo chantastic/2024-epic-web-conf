@@ -17,8 +17,9 @@ export const TicTacToe: Story = {
     const canvas = within(context.canvasElement);
 
     await expect(
-      await canvas.findByRole("button", { name: /Go to game start/i })
-    );
+      canvas.getByRole("button", { name: /Go to game start/i }),
+      "Go to game start button."
+    ).toBeInTheDocument();
   },
 };
 
@@ -26,18 +27,18 @@ export const FirstMoveIsX: Story = {
   play: async (context) => {
     const canvas = within(context.canvasElement);
 
-    await userEvent.click(
-      await canvas.findByLabelText("Open space. Column 1. Row 1")
-    );
+    await userEvent.click(canvas.getByLabelText("Open space. Column 1. Row 1"));
 
     await expect(
-      (await canvas.findAllByLabelText("Taken space. X. Column 1. Row 1"))
-        .length
+      canvas.getAllByLabelText("Taken space. X. Column 1. Row 1").length,
+      "All taken spaces"
     ).toBe(1);
 
-    await expect(await canvas.findByText("Next player: O")).toBeInTheDocument();
+    await expect(canvas.getByText("Next player: O")).toBeInTheDocument();
 
-    await expect(await canvas.findByRole("button", { name: /Go to move #1/i }));
+    await expect(
+      canvas.getByRole("button", { name: /Go to move #1/i })
+    ).toBeInTheDocument();
   },
 };
 
@@ -49,18 +50,16 @@ export const SecondMoveIsO: Story = {
       await FirstMoveIsX.play(context);
     }
 
-    await userEvent.click(
-      await canvas.findByLabelText("Open space. Column 2. Row 1")
-    );
+    await userEvent.click(canvas.getByLabelText("Open space. Column 2. Row 1"));
 
     await expect(
-      (await canvas.findAllByLabelText("Taken space. O. Column 2. Row 1"))
-        .length
+      canvas.getAllByLabelText("Taken space. O. Column 2. Row 1").length,
+      "All taken spaces"
     ).toBe(1);
 
-    await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
+    await expect(canvas.getByText("Next player: X")).toBeInTheDocument();
 
-    await expect(await canvas.findByRole("button", { name: /Go to move #2/i }));
+    await expect(canvas.getByRole("button", { name: /Go to move #2/i }));
   },
 };
 
@@ -72,17 +71,19 @@ export const XWins: Story = {
       await SecondMoveIsO.play(context);
     }
 
-    function moveOnSpaceWithLabel(label: string) {
+    async function moveOnSpaceWithLabel(label: string) {
       return userEvent.click(canvas.getByLabelText(label));
     }
 
-    moveOnSpaceWithLabel("Open space. Column 1. Row 2");
-    moveOnSpaceWithLabel("Open space. Column 2. Row 2");
-    moveOnSpaceWithLabel("Open space. Column 1. Row 3");
+    await moveOnSpaceWithLabel("Open space. Column 1. Row 2");
+    await moveOnSpaceWithLabel("Open space. Column 2. Row 2");
+    await moveOnSpaceWithLabel("Open space. Column 1. Row 3");
 
-    await expect(await canvas.findByText("Winner: X")).toBeInTheDocument();
+    await expect(canvas.getByText("Winner: X")).toBeInTheDocument();
 
-    await expect(await canvas.findByRole("button", { name: /Go to move #5/i }));
+    await expect(
+      canvas.getByRole("button", { name: /Go to move #5/i })
+    ).toBeInTheDocument();
   },
 };
 
@@ -94,18 +95,20 @@ export const OWins: Story = {
       await SecondMoveIsO.play(context);
     }
 
-    function moveOnSpaceWithLabel(label: string) {
+    async function moveOnSpaceWithLabel(label: string) {
       return userEvent.click(canvas.getByLabelText(label));
     }
 
-    moveOnSpaceWithLabel("Open space. Column 1. Row 2");
-    moveOnSpaceWithLabel("Open space. Column 2. Row 2");
-    moveOnSpaceWithLabel("Open space. Column 3. Row 3");
-    moveOnSpaceWithLabel("Open space. Column 2. Row 3");
+    await moveOnSpaceWithLabel("Open space. Column 1. Row 2");
+    await moveOnSpaceWithLabel("Open space. Column 2. Row 2");
+    await moveOnSpaceWithLabel("Open space. Column 3. Row 3");
+    await moveOnSpaceWithLabel("Open space. Column 2. Row 3");
 
-    await expect(await canvas.findByText("Winner: O")).toBeInTheDocument();
+    await expect(canvas.getByText("Winner: O")).toBeInTheDocument();
 
-    await expect(await canvas.findByRole("button", { name: /Go to move #6/i }));
+    await expect(
+      canvas.getByRole("button", { name: /Go to move #6/i })
+    ).toBeInTheDocument();
   },
 };
 
@@ -118,13 +121,15 @@ export const OWinsThenGoesToMove4: Story = {
     }
 
     await userEvent.click(
-      await canvas.findByRole("button", { name: /Go to move #4/i })
+      canvas.getByRole("button", { name: /Go to move #4/i })
     );
 
-    await expect((await canvas.findAllByLabelText(/Taken space/i)).length).toBe(
-      4
-    );
-    await expect(await canvas.findByText("Next player: X")).toBeInTheDocument();
+    await expect(
+      canvas.getAllByLabelText(/Taken space/i).length,
+      "All take spaces"
+    ).toBe(4);
+
+    await expect(canvas.getByText("Next player: X")).toBeInTheDocument();
   },
 };
 
@@ -139,12 +144,12 @@ export const OWinsThenGoesToMove4PlayWinningXMove: Story = {
     await userEvent.click(canvas.getByLabelText("Open space. Column 1. Row 3"));
 
     await expect(
-      await canvas.queryByRole("button", { name: /Go to move #6/i })
+      canvas.queryByRole("button", { name: /Go to move #6/i })
     ).toBeNull();
 
     await expect(
-      await canvas.queryByRole("button", { name: /Go to move #5/i })
-    ).not.toBeNull();
+      canvas.queryByRole("button", { name: /Go to move #5/i })
+    ).toBeInTheDocument();
 
     await expect(await canvas.findByText("Winner: X")).toBeInTheDocument();
   },
